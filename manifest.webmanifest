@@ -1,0 +1,17 @@
+{
+  "name": "引體向上 · 升級之路",
+  "short_name": "健身RPG",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#0f0f1a",
+  "description": "手機版遊戲化健身任務與引體向上進度追蹤器",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

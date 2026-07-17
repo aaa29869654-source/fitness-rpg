@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f1a">
+<link rel="manifest" href="manifest.webmanifest">
+<title>引體向上 · 升級之路</title>
+<style>
+:root{
+  --bg:#0f0f1a;--panel:#171729;--panel2:#1e1e36;--border:#33335a;
+  --text:#edecf5;--muted:#9696b2;--xp:#4ce0d2;--gold:#ffc947;
+  --flame:#ff6b4a;--success:#6fcf97;--danger:#ff7b8b;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{
+  margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 10% 0%,#202048 0,transparent 38%),
+    radial-gradient(circle at 95% 16%,#17304a 0,transparent 34%),var(--bg);
+  min-height:100vh;padding:env(safe-area-inset-top) 14px calc(78px + env(safe-area-inset-bottom));
+}
+.wrap{max-width:680px;margin:auto;padding-top:14px}
+.panel{
+  background:rgba(23,23,41,.96);border:1px solid var(--border);border-radius:16px;
+  box-shadow:0 10px 28px #0005,inset 0 0 0 1px #ffffff08;padding:16px;margin-bottom:14px
+}
+.top{display:flex;gap:12px;align-items:center}
+.avatar{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;font-size:29px;background:var(--panel2);border:1px solid var(--border)}
+.grow{flex:1}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.badge{font-size:12px;font-weight:900;background:var(--gold);color:#161625;padding:5px 8px;border-radius:8px}
+.streak{color:var(--flame);font-size:13px;font-weight:800}
+.bar{height:13px;background:#0b0b16;border-radius:99px;overflow:hidden;border:1px solid var(--border);margin-top:8px}
+.fill{height:100%;background:linear-gradient(90deg,var(--xp),#91ffd5);transition:.35s}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+h1{font-size:18px;margin:0 0 3px}h2{font-size:15px;margin:0 0 13px;color:var(--gold)}
+.date-pill{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:4px 7px;border-radius:99px}
+.quest{
+  display:flex;gap:12px;align-items:flex-start;padding:12px 6px;border-bottom:1px solid #ffffff0b;cursor:pointer
+}
+.quest:last-of-type{border-bottom:0}.quest.done{opacity:.56}
+.check{width:25px;height:25px;flex:0 0 25px;border:2px solid var(--border);border-radius:8px;display:grid;place-items:center;background:#0b0b16;font-weight:900}
+.quest.done .check{background:var(--success);border-color:var(--success);color:#102017}
+.qname{font-size:15px;font-weight:850}.qdetail{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
+.warn{margin-top:5px;font-size:11px;color:var(--danger)}
+.btn{width:100%;border:0;border-radius:12px;padding:14px;font-weight:900;font-size:15px;margin-top:12px;background:#66677c;color:#171729}
+.btn.ready{background:linear-gradient(90deg,var(--gold),#ffe69d);box-shadow:0 5px 0 #9e7612}.btn.done{background:var(--success)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.stat{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.stat strong{display:block;font-size:19px;color:var(--gold)}.stat span{font-size:11px;color:var(--muted)}
+.track{display:flex;gap:7px;margin-top:11px}.dot{width:18px;height:18px;border-radius:6px;border:2px solid var(--border);background:#0b0b16}.dot.on{background:var(--xp);border-color:var(--xp)}
+.note{line-height:1.6;font-size:13px;color:var(--muted)}
+.bottom{
+  position:fixed;left:0;right:0;bottom:0;background:#10101deF;border-top:1px solid var(--border);
+  padding:9px 14px calc(9px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)
+}
+.bottom-inner{max-width:680px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.navbtn{border:0;border-radius:10px;padding:10px 6px;background:transparent;color:var(--muted);font-size:12px}
+.navbtn.active{background:var(--panel2);color:var(--text)}
+.screen{display:none}.screen.active{display:block}
+.road{position:relative;margin-left:5px}.node{display:flex;gap:12px;padding:9px 0}
+.circle{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--border);background:var(--panel2);z-index:1;font-weight:900}
+.node.past .circle{background:var(--xp);color:#10201d;border-color:var(--xp)}.node.now .circle{background:var(--gold);color:#201900;border-color:var(--gold)}
+.rtxt b{font-size:13px}.rtxt div{font-size:11px;color:var(--muted);margin-top:3px}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+input{width:100%;background:#0c0c18;border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px;font-size:16px}
+.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.save{background:var(--xp);color:#10201d}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#242441;border:1px solid var(--border);padding:10px 14px;border-radius:10px;font-size:13px;display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section id="home" class="screen active">
+    <div class="panel top">
+      <div class="avatar">🏋️</div>
+      <div class="grow">
+        <div class="row"><div><h1>引體向上 · 升級之路</h1><div class="small">手機版健身 RPG</div></div><span class="streak" id="streak"></span></div>
+        <div class="row" style="margin-top:9px"><span class="badge" id="levelBadge"></span><span class="small" id="xpText"></span></div>
+        <div class="bar"><div class="fill" id="xpFill"></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="row"><h2>⚔️ 明日任務</h2><span class="date-pill" id="tomorrowDate"></span></div>
+      <div id="questList"></div>
+      <button id="completeBtn" class="btn" disabled>還有任務未完成</button>
+      <div class="track" id="sessionDots"></div>
+    </div>
+
+    <div class="panel">
+      <h2>📊 目前進度</h2>
+      <div class="stats">
+        <div class="stat"><strong id="pullups">1/3</strong><span>引體向上</span></div>
+        <div class="stat"><strong id="totalSessions">4</strong><span>完整訓練</span></div>
+        <div class="stat"><strong id="completion">0%</strong><span>明日完成率</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>🩹 手腕保護</h2>
+      <div class="note">明天先避開跪姿伏地挺身、反向平板及長時間手掌撐地。單槓懸垂只有在手腕完全不痛時才做；若出現腫脹、麻木或休息時仍痛，停止上肢訓練。</div>
+    </div>
+  </section>
+
+  <section id="roadmap" class="screen">
+    <div class="panel"><h2>🗺️ 升級地圖</h2><div id="road"></div></div>
+  </section>
+
+  <section id="profile" class="screen">
+    <div class="panel">
+      <h2>⚙️ 訓練資料</h2>
+      <div class="formrow">
+        <div><label>目前最多引體向上</label><input id="pullInput" type="number" min="0" max="99"></div>
+        <div><label>連續訓練天數</label><input id="streakInput" type="number" min="0" max="999"></div>
+      </div>
+      <button class="btn save" id="saveProfile">儲存資料</button>
+      <button class="btn" id="resetTomorrow" style="background:var(--panel2);color:var(--text)">重設明日任務</button>
+    </div>
+    <div class="panel"><h2>📱 安裝方式</h2><div class="note">Android Chrome：開啟選單後選「新增至主畫面」或「安裝應用程式」。iPhone Safari：點分享，再選「加入主畫面」。</div></div>
+  </section>
+</div>
+
+<div class="bottom"><div class="bottom-inner">
+  <button class="navbtn active" data-screen="home">🏠<br>任務</button>
+  <button class="navbtn" data-screen="roadmap">🗺️<br>地圖</button>
+  <button class="navbtn" data-screen="profile">⚙️<br>資料</button>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTS=[
+{id:"warmup",name:"🔥 熱身",detail:"肩膀繞圈、手臂畫圈、貓牛式，共 3 分鐘"},
+{id:"deadbug",name:"🐞 Dead Bug",detail:"3 組 × 10 下；下背保持貼地"},
+{id:"bridge",name:"🌉 臀橋",detail:"3 組 × 12 下；頂點夾臀 1 秒"},
+{id:"pelvic",name:"🦴 仰臥骨盆後傾",detail:"2 組 × 10 下；吐氣時輕壓下背"},
+{id:"legs",name:"🦵 仰臥交替抬腿",detail:"2 組 × 左右各 8 下；腰不要拱起"},
+{id:"bicep",name:"💪 二頭彎舉",detail:"3 組 × 10 下；可用水瓶或彈力帶"},
+{id:"hang",name:"🧗 單槓懸垂",detail:"2 組 × 10–15 秒",warn:"手腕不痛才做；不舒服可直接標記跳過"}
+];
+const ROAD=[
+["1","新手覺醒","完成初始測驗"],
+["2","核心啟動","Dead Bug、臀橋與基礎核心"],
+["3","彈力帶輔助引體","完成本級訓練後解鎖"],
+["4","負向引體","練習緩慢下放"],
+["5","背肌與二頭強化","增加拉力基礎"],
+["6","輔助引體 8–10 下","建立穩定訓練量"],
+["7","負向引體 5 秒","提升離心控制"],
+["8","降低輔助強度","接近徒手階段"],
+["9","徒手 1–2 下","穩定完成"],
+["🏆","BOSS：徒手 3 下","最終目標"]
+];
+const KEY="fitnessRpgMobileV1";
+const defaultState={level:2,streak:4,sessionsThisLevel:0,totalSessions:4,maxPullups:1,checks:{},completed:false};
+let state=JSON.parse(localStorage.getItem(KEY)||"null")||defaultState;
+QUESTS.forEach(q=>{if(!(q.id in state.checks))state.checks[q.id]=false});
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function tomorrow(){
+ const d=new Date();d.setDate(d.getDate()+1);
+ return new Intl.DateTimeFormat("zh-TW",{month:"long",day:"numeric",weekday:"short"}).format(d)
+}
+function need(){return state.level<=3?2:state.level<=6?3:4}
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1700)}
+function render(){
+ const doneCount=QUESTS.filter(q=>state.checks[q.id]).length;
+ const all=doneCount===QUESTS.length;
+ document.getElementById("streak").textContent=`🔥 ${state.streak} 天`;
+ document.getElementById("levelBadge").textContent=`LV.${state.level}`;
+ document.getElementById("xpText").textContent=`${state.sessionsThisLevel}/${need()} 次`;
+ document.getElementById("xpFill").style.width=`${Math.min(100,state.sessionsThisLevel/need()*100)}%`;
+ document.getElementById("tomorrowDate").textContent=tomorrow();
+ document.getElementById("questList").innerHTML=QUESTS.map(q=>`
+ <div class="quest ${state.checks[q.id]?"done":""}" data-id="${q.id}">
+  <div class="check">${state.checks[q.id]?"✓":""}</div>
+  <div><div class="qname">${q.name}</div><div class="qdetail">${q.detail}</div>${q.warn?`<div class="warn">${q.warn}</div>`:""}</div>
+ </div>`).join("");
+ const b=document.getElementById("completeBtn");
+ b.disabled=!all||state.completed;
+ b.className="btn "+(state.completed?"done":all?"ready":"");
+ b.textContent=state.completed?"✓ 明日任務已預先完成":all?"⚔️ 完成任務並獲得 EXP":"還有任務未完成";
+ document.getElementById("sessionDots").innerHTML=Array.from({length:need()},(_,i)=>`<div class="dot ${i<state.sessionsThisLevel?"on":""}"></div>`).join("")+`<span class="small">再完成 ${Math.max(0,need()-state.sessionsThisLevel)} 次升級</span>`;
+ document.getElementById("pullups").textContent=`${state.maxPullups}/3`;
+ document.getElementById("totalSessions").textContent=state.totalSessions;
+ document.getElementById("completion").textContent=Math.round(doneCount/QUESTS.length*100)+"%";
+ document.getElementById("pullInput").value=state.maxPullups;
+ document.getElementById("streakInput").value=state.streak;
+ document.getElementById("road").innerHTML=ROAD.map((r,i)=>{
+   const lvl=i+1,cls=lvl<state.level?"past":lvl===state.level?"now":"";
+   return `<div class="node ${cls}"><div class="circle">${r[0]}</div><div class="rtxt"><b>Lv.${lvl} ${r[1]}</b><div>${r[2]}</div></div></div>`
+ }).join("");
+ document.querySelectorAll(".quest").forEach(el=>el.onclick=()=>{if(state.completed)return;state.checks[el.dataset.id]=!state.checks[el.dataset.id];save();render()});
+}
+document.getElementById("completeBtn").onclick=()=>{
+ if(state.completed)return;
+ state.completed=true;state.totalSessions++;state.sessionsThisLevel++;
+ if(state.sessionsThisLevel>=need()&&state.level<10){state.sessionsThisLevel=0;state.level++;toast(`LEVEL UP！升到 Lv.${state.level}`)}else toast("任務完成，EXP 已增加");
+ save();render()
+};
+document.getElementById("saveProfile").onclick=()=>{
+ state.maxPullups=Math.max(0,+document.getElementById("pullInput").value||0);
+ state.streak=Math.max(0,+document.getElementById("streakInput").value||0);save();render();toast("資料已儲存")
+};
+document.getElementById("resetTomorrow").onclick=()=>{
+ state.checks={};QUESTS.forEach(q=>state.checks[q.id]=false);state.completed=false;save();render();toast("明日任務已重設")
+};
+document.querySelectorAll(".navbtn").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".navbtn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(btn.dataset.screen).classList.add("active")
+});
+if("serviceWorker" in navigator)navigator.serviceWorker.register("./service-worker.js");
+render();
+</script>
+</body>
+</html>
