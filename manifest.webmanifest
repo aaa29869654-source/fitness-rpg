@@ -1,11 +1,11 @@
 {
-  "name": "Fitness Odyssey V7.0 Build 2",
+  "name": "Fitness Odyssey V7.0 Build 3",
   "short_name": "Odyssey",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#07111f",
   "theme_color": "#07111f",
-  "description": "以循序漸進健身為核心的 RPG PWA。",
+  "description": "具有程序化音樂、動畫與科學化訓練的健身 RPG PWA。",
   "icons": []
 }

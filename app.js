@@ -5,7 +5,7 @@ const DATA = {
   academy: [{"id": "safety", "title": "辨識安全訊號", "summary": "分辨正常用力、延遲性痠痛與需要停止的警訊。"}, {"id": "warmup", "title": "暖身不是儀式", "summary": "用漸進活動提高體溫，並排練今天會用到的動作。"}, {"id": "effort", "title": "保留餘力", "summary": "多數新手訓練不必做到力竭，先維持穩定技術。"}, {"id": "progression", "title": "如何安全進步", "summary": "先增加穩定性與次數，再逐步增加阻力或難度。"}, {"id": "recovery", "title": "恢復也是訓練", "summary": "疲勞、睡眠與疼痛會影響課表；降低負荷不代表失敗。"}, {"id": "consistency", "title": "長期一致性", "summary": "可持續的少量訓練，通常勝過偶爾一次過量訓練。"}]
 };
 
-const STORAGE_KEY="fitnessOdysseyV7Build2";
+const STORAGE_KEY="fitnessOdysseyV7Build3";
 const $=s=>document.querySelector(s);
 const view=$("#view"),title=$("#page-title"),modal=$("#modal"),modalContent=$("#modal-content");
 const defaultState={
@@ -17,12 +17,77 @@ const defaultState={
   unlockedWorld:1,academyCompleted:[],lastDate:null,baseLevel:1,storyUnlocked:[1]
 };
 let state=load();
+state.audio={music:true,sfx:true,musicVolume:.22,sfxVolume:.45,...(state.audio||{})};
 let deferredPrompt=null;
 function load(){try{return {...defaultState,...JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")}}catch{return structuredClone(defaultState)}}
 function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
 function key(){return new Date().toISOString().slice(0,10)}
 function esc(v=""){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 function pct(n,m=100){return Math.max(0,Math.min(100,Math.round(n/m*100)))}
+
+/* Procedural soundtrack: generated locally with Web Audio, so no copyrighted audio files are used. */
+const AudioEngine={
+  ctx:null,master:null,musicGain:null,sfxGain:null,timer:null,step:0,nodes:[],
+  ensure(){
+    if(this.ctx)return true;
+    const C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return false;
+    this.ctx=new C();
+    this.master=this.ctx.createGain();this.musicGain=this.ctx.createGain();this.sfxGain=this.ctx.createGain();
+    this.musicGain.connect(this.master);this.sfxGain.connect(this.master);this.master.connect(this.ctx.destination);
+    this.musicGain.gain.value=state.audio.musicVolume;this.sfxGain.gain.value=state.audio.sfxVolume;
+    return true
+  },
+  tone(freq,dur=.35,type="sine",gain=.035,when=0,target="music"){
+    if(!this.ensure())return;
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain(),bus=target==="sfx"?this.sfxGain:this.musicGain;
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(0,this.ctx.currentTime+when);
+    g.gain.linearRampToValueAtTime(gain,this.ctx.currentTime+when+.025);
+    g.gain.exponentialRampToValueAtTime(.0001,this.ctx.currentTime+when+dur);
+    o.connect(g);g.connect(bus);o.start(this.ctx.currentTime+when);o.stop(this.ctx.currentTime+when+dur+.03)
+  },
+  start(){
+    if(!state.audio.music||!this.ensure())return;
+    if(this.ctx.state==="suspended")this.ctx.resume();
+    if(this.timer)return;
+    const scale=[261.63,329.63,392,523.25,392,329.63,293.66,349.23];
+    const play=()=>{
+      if(!state.audio.music)return;
+      const root=scale[this.step%scale.length];
+      this.tone(root,.72,"triangle",.025);
+      this.tone(root/2,1.2,"sine",.018,.02);
+      if(this.step%2===0)this.tone(root*1.5,.42,"sine",.012,.12);
+      this.step++;
+    };
+    play();this.timer=setInterval(play,760);updateAudioButton()
+  },
+  stop(){if(this.timer){clearInterval(this.timer);this.timer=null}updateAudioButton()},
+  toggle(){
+    state.audio.music=!state.audio.music;
+    state.audio.music?this.start():this.stop();
+    save();updateAudioButton()
+  },
+  setMusic(v){state.audio.musicVolume=+v;this.ensure();this.musicGain.gain.value=+v;save()},
+  setSfx(v){state.audio.sfxVolume=+v;this.ensure();this.sfxGain.gain.value=+v;save()},
+  sfx(name){
+    if(!state.audio.sfx)return;
+    if(name==="hit"){this.tone(120,.16,"sawtooth",.12,0,"sfx");this.tone(80,.22,"square",.06,.04,"sfx")}
+    if(name==="complete"){[523.25,659.25,783.99].forEach((f,i)=>this.tone(f,.38,"sine",.07,i*.09,"sfx"))}
+    if(name==="click")this.tone(520,.08,"sine",.025,0,"sfx")
+    if(name==="level"){[392,523.25,659.25,783.99].forEach((f,i)=>this.tone(f,.55,"triangle",.065,i*.1,"sfx"))}
+  }
+};
+function updateAudioButton(){
+  const b=$("#audio-btn");if(!b)return;
+  b.textContent=state.audio.music&&AudioEngine.timer?"🔊":"🔇";
+  b.title=state.audio.music?"關閉音樂":"開啟音樂"
+}
+function floatingDamage(){
+  const d=document.createElement("div");d.className="damage";d.textContent="⚔️ -25";
+  d.style.left=(55+Math.random()*22)+"%";d.style.top=(30+Math.random()*18)+"%";
+  document.body.appendChild(d);setTimeout(()=>d.remove(),850)
+}
+
 function normalize(){
   const t=key();
   if(state.lastDate&&state.lastDate!==t){state.day++;state.week=Math.min(52,Math.ceil(state.day/7));state.completedToday=[]}
@@ -78,23 +143,32 @@ function tasks(w){return[
 {id:"workout",name:w.name,meta:`${w.minutes} 分鐘 · ${w.type}`},
 {id:"cooldown",name:"收操與呼吸",meta:"約 3–5 分鐘"}]}
 function render(){
-  document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===state.route));
+  $("#audio-btn").addEventListener("click",()=>AudioEngine.toggle());
+document.addEventListener("pointerdown",()=>{if(state.audio.music&&!AudioEngine.timer)AudioEngine.start()},{once:true});
+updateAudioButton();
+document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.route===state.route));
   const names={today:"今日主線",world:"世界地圖",academy:"英雄學院",base:"英雄基地",hero:"英雄能力",journal:"命運之書",settings:"設定"};
   title.textContent=names[state.route]||"Fitness Odyssey";
   ({today:renderToday,world:renderWorld,academy:renderAcademy,base:renderBase,hero:renderHero,journal:renderJournal,settings:renderSettings}[state.route]||renderToday)()
 }
 function renderToday(){
   const w=chooseWorkout(),ts=tasks(w),done=ts.filter(t=>state.completedToday.includes(t.id)).length,bossHp=Math.round((1-done/ts.length)*100);
+  const npc=done===0?"教官艾琳：先確認今天的身體狀態。我們不是賭意志力。":done<4?"教官艾琳：很好。一次只完成眼前這個階段。":"村長：霧散了！你在現實中完成的每一步，都改變了這個世界。";
   view.innerHTML=`
   ${!state.assessment?`<section class="card"><h2>先完成英雄評估</h2><p class="muted">評估會決定起始難度，不是比賽，也不需要做到極限。</p><button class="btn full" onclick="openAssessment()">開始評估</button></section>`:""}
+  <section class="card adventure-scene" id="adventure-scene">
+    <span class="scene-label">🏡 覺醒村 · 第 ${state.day} 天</span><span class="cloud c1">☁️</span><span class="cloud c2">☁️</span>
+    <div class="hero-sprite">🧝</div><div class="boss-sprite">${bossHp===0?"✨":"🟢"}</div><div class="scene-ground"></div>
+    <div class="scene-dialogue">${esc(npc)}</div>
+  </section>
   <section class="card hero-card"><div class="row between"><div><span class="badge">第 ${state.day} 天 · 第 ${state.week} 週</span><h2 style="margin:12px 0 5px">${w.icon} ${esc(w.name)}</h2><p class="muted">${esc(w.phase)} · ${w.minutes} 分鐘 · ${assessmentLevel()}</p></div><div style="text-align:right"><div class="big-number">${done}/${ts.length}</div><small class="muted">主線完成</small></div></div><div class="progress"><span style="width:${pct(done,ts.length)}%"></span></div></section>
   <section class="card boss" id="boss-card"><div class="row between"><h2>怠惰史萊姆</h2><strong class="${bossHp===0?"green":"danger"}">${bossHp===0?"已擊敗":`HP ${bossHp}%`}</strong></div><div class="progress"><span style="width:${bossHp}%;background:linear-gradient(90deg,#ff7185,#ffb35c)"></span></div><div class="story">${bossHp===0?"村口的霧散開了。老教官點頭說：『你不是靠意志爆發，而是靠今天真的完成了訓練。』":"史萊姆盤踞在村口。只有完成真實訓練，它才會受傷。"}</div></section>
   <section class="card"><div class="row between"><h2>今日任務</h2><button class="btn secondary" onclick="openReadiness()">狀態檢查</button></div>
   ${ts.map(t=>`<div class="quest ${state.completedToday.includes(t.id)?"done":""}"><button class="quest-check" onclick="toggleTask('${t.id}')">${state.completedToday.includes(t.id)?"✓":""}</button><div><div class="quest-name">${esc(t.name)}</div><div class="quest-meta">${esc(t.meta)}</div></div>${t.id==="workout"?`<button class="btn secondary small" onclick="openWorkout()">查看</button>`:""}</div>`).join("")}
   </section>
-  <section class="card"><h2>今日教練判斷</h2><p>${esc(w.purpose)}</p><div class="notice">胸痛、暈眩、異常呼吸困難或尖銳疼痛時，請停止運動並尋求專業協助。</div></section>`
-}
-function renderWorld(){
+  <section class="card npc-card"><div class="npc-avatar">🧙‍♀️</div><div><strong>教官艾琳</strong><p class="muted" style="margin:5px 0 0">${esc(w.purpose)}</p></div></section>
+  <section class="card"><div class="notice">胸痛、暈眩、異常呼吸困難或尖銳疼痛時，請停止運動並尋求專業協助。</div></section>`
+}function renderWorld(){
   view.innerHTML=`<section class="card"><h2>十二王國</h2><p class="muted">每個王國對應一段真實體能成長。每完成一週主線，就逐步解鎖下一區。</p></section><div class="world">${DATA.worlds.map((w,i)=>{const u=i<state.unlockedWorld;return `<article class="world-node ${u?"unlocked":"locked"}"><div class="row between"><strong>${i+1}. ${esc(w.name)}</strong><span>${u?"已解鎖":"🔒"}</span></div><div class="muted">${esc(w.focus)} · Boss：${esc(w.boss)}</div>${u?`<p style="margin:8px 0 0">${esc(w.story)}</p>`:""}</article>`}).join("")}</div>`
 }
 function renderAcademy(){
@@ -114,7 +188,10 @@ function renderJournal(){
   view.innerHTML=`<section class="card"><div class="row between"><h2>訓練紀錄</h2><span class="badge">${state.history.length} 筆</span></div>${state.history.length?state.history.slice().reverse().map(h=>`<div class="lesson"><strong>${esc(h.title)}</strong><div class="muted">${esc(h.date)} · ${esc(h.detail)}</div></div>`).join(""):`<p class="muted">完成今天全部主線後，第一頁故事就會寫入這裡。</p>`}</section>`
 }
 function renderSettings(){
-  view.innerHTML=`<section class="card"><h2>英雄設定</h2><label><span>名稱</span><input id="name-input" type="text" value="${esc(state.profile.name)}"></label><label><span>主要目標</span><select id="goal-input"><option>健康強健</option><option>建立習慣</option><option>提升肌力</option><option>改善心肺</option><option>體態管理</option></select></label><label><span>平常可訓練時間</span><select id="minutes-input"><option value="15">15 分鐘</option><option value="25">25 分鐘</option><option value="40">40 分鐘</option></select></label><button class="btn full" onclick="saveSettings()">儲存設定</button></section><section class="card"><h2>資料管理</h2><div class="grid"><button class="btn secondary" onclick="exportData()">匯出紀錄</button><button class="btn danger" onclick="resetData()">重設資料</button></div></section><section class="card"><h2>版本</h2><p class="muted">App V7.0 Build 2 · Program 2026.2 · Exercise DB 2.0</p></section>`;
+  view.innerHTML=`<section class="card"><h2>英雄設定</h2><label><span>名稱</span><input id="name-input" type="text" value="${esc(state.profile.name)}"></label><label><span>主要目標</span><select id="goal-input"><option>健康強健</option><option>建立習慣</option><option>提升肌力</option><option>改善心肺</option><option>體態管理</option></select></label><label><span>平常可訓練時間</span><select id="minutes-input"><option value="15">15 分鐘</option><option value="25">25 分鐘</option><option value="40">40 分鐘</option></select></label><button class="btn full" onclick="saveSettings()">儲存設定</button></section><section class="card"><h2>資料管理</h2><div class="grid"><button class="btn secondary" onclick="exportData()">匯出紀錄</button><button class="btn danger" onclick="resetData()">重設資料</button></div></section><section class="card"><h2>音樂與音效</h2>
+<div class="sound-control"><div class="row between"><strong>背景音樂</strong><span class="music-status">${state.audio.music?'<i class="music-dot"></i>啟用':'已關閉'}</span></div><input type="range" min="0" max="0.6" step="0.01" value="${state.audio.musicVolume}" oninput="AudioEngine.setMusic(this.value)"></div>
+<div class="sound-control"><div class="row between"><strong>戰鬥音效</strong><button class="btn secondary small" onclick="toggleSfx()">${state.audio.sfx?'開啟':'關閉'}</button></div><input type="range" min="0" max="0.8" step="0.01" value="${state.audio.sfxVolume}" oninput="AudioEngine.setSfx(this.value)"></div>
+<p class="muted">音樂由瀏覽器即時合成，不使用外部或有版權疑慮的音樂檔。</p></section><section class="card"><h2>版本</h2><p class="muted">App V7.0 Build 3 · Program 2026.3 · Exercise DB 3.0</p></section>`;
   setTimeout(()=>{$("#goal-input").value=state.profile.goal;$("#minutes-input").value=String(state.profile.minutes)},0)
 }
 window.openAssessment=()=>{
@@ -134,15 +211,19 @@ window.showExercise=id=>{const e=ex(id);if(!e)return;modalContent.innerHTML=`<h2
 window.toggleTask=id=>{
   const exists=state.completedToday.includes(id);
   state.completedToday=exists?state.completedToday.filter(x=>x!==id):[...state.completedToday,id];
-  if(!exists){const card=$("#boss-card");if(card){card.classList.add("boss-hit");setTimeout(()=>card.classList.remove("boss-hit"),350)}if(id==="workout"){state.stats.strength=Math.min(100,state.stats.strength+1);state.stats.core=Math.min(100,state.stats.core+1)}if(id==="cooldown"){state.stats.mobility=Math.min(100,state.stats.mobility+1);state.stats.recovery=Math.min(100,state.stats.recovery+1)}}
+  if(!exists){AudioEngine.sfx("hit");floatingDamage();const card=$("#boss-card");if(card){card.classList.add("boss-hit");setTimeout(()=>card.classList.remove("boss-hit"),350)}if(id==="workout"){state.stats.strength=Math.min(100,state.stats.strength+1);state.stats.core=Math.min(100,state.stats.core+1)}if(id==="cooldown"){state.stats.mobility=Math.min(100,state.stats.mobility+1);state.stats.recovery=Math.min(100,state.stats.recovery+1)}}
   const all=["readiness","warmup","workout","cooldown"].every(x=>state.completedToday.includes(x));
-  if(all&&!state.history.some(h=>h.date===key())){state.xp+=100;state.streak+=1;state.history.push({date:key(),title:`第 ${state.day} 天主線完成`,detail:chooseWorkout().name});if(state.day%7===0)state.unlockedWorld=Math.min(12,state.unlockedWorld+1)}
+  if(all&&!state.history.some(h=>h.date===key())){AudioEngine.sfx("complete");state.xp+=100;state.streak+=1;state.history.push({date:key(),title:`第 ${state.day} 天主線完成`,detail:chooseWorkout().name});if(state.day%7===0)state.unlockedWorld=Math.min(12,state.unlockedWorld+1)}
   save();render()
 }
 window.completeLesson=id=>{if(!state.academyCompleted.includes(id)){state.academyCompleted.push(id);state.xp+=20}save();render()}
 window.saveSettings=()=>{state.profile.name=$("#name-input").value.trim()||"新英雄";state.profile.goal=$("#goal-input").value;state.profile.minutes=+$("#minutes-input").value;save();render()}
+window.toggleSfx=()=>{state.audio.sfx=!state.audio.sfx;save();AudioEngine.sfx('click');render()}
 window.exportData=()=>{const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="fitness-odyssey-save.json";a.click();URL.revokeObjectURL(a.href)}
 window.resetData=()=>{if(confirm("確定要清除所有本機進度嗎？")){localStorage.removeItem(STORAGE_KEY);state=structuredClone(defaultState);normalize();render()}}
+$("#audio-btn").addEventListener("click",()=>AudioEngine.toggle());
+document.addEventListener("pointerdown",()=>{if(state.audio.music&&!AudioEngine.timer)AudioEngine.start()},{once:true});
+updateAudioButton();
 document.querySelectorAll(".bottom-nav button").forEach(btn=>btn.addEventListener("click",()=>{state.route=btn.dataset.route;save();render()}));
 $("#modal-close").addEventListener("click",()=>modal.close());
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;$("#install-btn").classList.remove("hidden")});

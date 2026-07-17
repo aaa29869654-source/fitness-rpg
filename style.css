@@ -58,3 +58,28 @@ select,input[type=number],input[type=text]{width:100%;border-radius:12px;padding
 .exercise-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .exercise-actions button{padding:8px 10px}
 @media(max-width:560px){.grid.three{grid-template-columns:1fr 1fr}.topbar{padding-left:14px;padding-right:14px}.view{padding-left:12px;padding-right:12px}.bottom-nav small{font-size:.55rem}.bottom-nav span{font-size:1.05rem}}
+
+.top-actions{display:flex;align-items:center;gap:8px}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:rgba(20,40,65,.9);color:var(--text);font-size:1.2rem}
+.adventure-scene{position:relative;min-height:235px;overflow:hidden;padding:0;background:linear-gradient(180deg,#17385d 0%,#376c82 46%,#284c39 47%,#10271f 100%)}
+.adventure-scene:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 74% 22%,rgba(255,225,132,.62) 0 6%,transparent 7%),linear-gradient(110deg,transparent 50%,rgba(255,255,255,.08) 51%,transparent 54%);pointer-events:none}
+.cloud{position:absolute;font-size:2.4rem;opacity:.72;animation:drift 14s linear infinite}
+.cloud.c1{top:30px;left:-60px}.cloud.c2{top:75px;left:-100px;animation-delay:-7s}
+@keyframes drift{to{transform:translateX(900px)}}
+.scene-ground{position:absolute;left:0;right:0;bottom:0;height:62px;background:linear-gradient(#294d36,#13281f)}
+.hero-sprite{position:absolute;left:14%;bottom:42px;font-size:4.6rem;filter:drop-shadow(0 10px 8px rgba(0,0,0,.35));animation:breathe 2.1s ease-in-out infinite}
+.boss-sprite{position:absolute;right:10%;bottom:42px;font-size:5.2rem;filter:drop-shadow(0 10px 8px rgba(0,0,0,.35));animation:breathe 2.7s ease-in-out infinite}
+@keyframes breathe{50%{transform:translateY(-7px) scale(1.025)}}
+.scene-label{position:absolute;top:14px;left:14px;padding:7px 11px;border-radius:99px;background:rgba(7,17,31,.7);font-size:.78rem;border:1px solid rgba(255,255,255,.18)}
+.scene-dialogue{position:absolute;left:14px;right:14px;bottom:10px;padding:10px 12px;border-radius:14px;background:rgba(7,17,31,.88);border:1px solid rgba(255,255,255,.17);font-size:.86rem;z-index:2}
+.damage{position:fixed;z-index:50;font-size:2rem;font-weight:900;color:#fff;text-shadow:0 2px 8px #ff334f;pointer-events:none;animation:damageFly .8s ease-out forwards}
+@keyframes damageFly{0%{opacity:0;transform:translateY(10px) scale(.7)}20%{opacity:1}100%{opacity:0;transform:translateY(-75px) scale(1.25)}}
+.reward-pop{animation:reward .55s ease}
+@keyframes reward{0%{transform:scale(.96)}45%{transform:scale(1.025);box-shadow:0 0 28px rgba(255,209,102,.38)}100%{transform:scale(1)}}
+.npc-card{display:grid;grid-template-columns:62px 1fr;gap:12px;align-items:center}
+.npc-avatar{width:62px;height:62px;display:grid;place-items:center;border-radius:18px;background:#203b59;font-size:2rem;border:1px solid #395c7d}
+.sound-control{padding:13px;border-radius:15px;background:#0a1728;border:1px solid #263f5d;margin-bottom:11px}
+.sound-control input[type=range]{width:100%;accent-color:var(--gold)}
+.music-status{display:inline-flex;align-items:center;gap:7px;color:var(--green);font-size:.8rem}
+.music-dot{width:8px;height:8px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.35}}
