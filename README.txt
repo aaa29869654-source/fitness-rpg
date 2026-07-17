@@ -1,10 +1,25 @@
-手機版健身 RPG
+健身勇者 RPG 3.0
 
-使用方式：
-1. 將整個資料夾上傳至任何靜態網站空間，例如 GitHub Pages、Netlify、Cloudflare Pages。
-2. 開啟 index.html 對應網址。
-3. Android Chrome 可選「安裝應用程式」；iPhone Safari 可選「加入主畫面」。
+主要功能：
+- 健身動作＝攻擊怪物
+- 五張冒險地圖與五個 Boss
+- Combo 連擊與額外傷害
+- Boss 掉落裝備
+- 裝備提供傷害加成
+- 等級、XP、金幣、職業與稱號
+- 自訂新增／刪除健身任務
+- 每日自動重置任務
+- 戰鬥紀錄與本機存檔
+- 可匯出 JSON 存檔
 
-注意：
-- 瀏覽器紀錄使用 localStorage 儲存在該裝置。
-- PWA 離線功能通常需要透過 HTTPS 網址使用；直接雙擊本機 HTML 時，主要介面仍可運作，但安裝與離線快取可能受限。
+GitHub 更新方式：
+1. 解壓縮 ZIP。
+2. 將以下五個檔案上傳並覆蓋 repository 根目錄：
+   index.html
+   manifest.webmanifest
+   service-worker.js
+   icon.svg
+   README.txt
+3. Commit changes。
+4. 等候 GitHub Pages 約 1 分鐘。
+5. Safari 重新整理；若仍顯示舊版，關閉主畫面 App 再重開。

@@ -1,214 +1,430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f0f1a">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b17">
 <link rel="manifest" href="manifest.webmanifest">
-<title>引體向上 · 升級之路</title>
+<title>健身勇者 RPG 3.0</title>
 <style>
 :root{
-  --bg:#0f0f1a;--panel:#171729;--panel2:#1e1e36;--border:#33335a;
-  --text:#edecf5;--muted:#9696b2;--xp:#4ce0d2;--gold:#ffc947;
-  --flame:#ff6b4a;--success:#6fcf97;--danger:#ff7b8b;
+  --bg:#070914;--panel:#12162a;--panel2:#1a2040;--line:#303963;
+  --text:#f4f1ff;--muted:#a7abc5;--cyan:#65e5ff;--gold:#ffd166;
+  --green:#69e09f;--red:#ff6b7b;--purple:#a987ff;--orange:#ff9f43;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{background:var(--bg)}
 body{
-  margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;
-  background:
-    radial-gradient(circle at 10% 0%,#202048 0,transparent 38%),
-    radial-gradient(circle at 95% 16%,#17304a 0,transparent 34%),var(--bg);
-  min-height:100vh;padding:env(safe-area-inset-top) 14px calc(78px + env(safe-area-inset-bottom));
+ margin:0;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;
+ min-height:100vh;padding:env(safe-area-inset-top) 12px calc(90px + env(safe-area-inset-bottom));
+ background:
+ radial-gradient(circle at 20% 0%,#1e2f71 0,transparent 34%),
+ radial-gradient(circle at 90% 18%,#4a1f4f 0,transparent 30%),
+ linear-gradient(180deg,#0b0e1d,#070914 60%);
 }
-.wrap{max-width:680px;margin:auto;padding-top:14px}
-.panel{
-  background:rgba(23,23,41,.96);border:1px solid var(--border);border-radius:16px;
-  box-shadow:0 10px 28px #0005,inset 0 0 0 1px #ffffff08;padding:16px;margin-bottom:14px
-}
-.top{display:flex;gap:12px;align-items:center}
-.avatar{width:56px;height:56px;border-radius:15px;display:grid;place-items:center;font-size:29px;background:var(--panel2);border:1px solid var(--border)}
-.grow{flex:1}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.badge{font-size:12px;font-weight:900;background:var(--gold);color:#161625;padding:5px 8px;border-radius:8px}
-.streak{color:var(--flame);font-size:13px;font-weight:800}
-.bar{height:13px;background:#0b0b16;border-radius:99px;overflow:hidden;border:1px solid var(--border);margin-top:8px}
-.fill{height:100%;background:linear-gradient(90deg,var(--xp),#91ffd5);transition:.35s}
-.small{font-size:12px;color:var(--muted);margin-top:6px}
-h1{font-size:18px;margin:0 0 3px}h2{font-size:15px;margin:0 0 13px;color:var(--gold)}
-.date-pill{font-size:11px;color:var(--muted);border:1px solid var(--border);padding:4px 7px;border-radius:99px}
-.quest{
-  display:flex;gap:12px;align-items:flex-start;padding:12px 6px;border-bottom:1px solid #ffffff0b;cursor:pointer
-}
-.quest:last-of-type{border-bottom:0}.quest.done{opacity:.56}
-.check{width:25px;height:25px;flex:0 0 25px;border:2px solid var(--border);border-radius:8px;display:grid;place-items:center;background:#0b0b16;font-weight:900}
-.quest.done .check{background:var(--success);border-color:var(--success);color:#102017}
-.qname{font-size:15px;font-weight:850}.qdetail{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.45}
-.warn{margin-top:5px;font-size:11px;color:var(--danger)}
-.btn{width:100%;border:0;border-radius:12px;padding:14px;font-weight:900;font-size:15px;margin-top:12px;background:#66677c;color:#171729}
-.btn.ready{background:linear-gradient(90deg,var(--gold),#ffe69d);box-shadow:0 5px 0 #9e7612}.btn.done{background:var(--success)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-.stat{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
-.stat strong{display:block;font-size:19px;color:var(--gold)}.stat span{font-size:11px;color:var(--muted)}
-.track{display:flex;gap:7px;margin-top:11px}.dot{width:18px;height:18px;border-radius:6px;border:2px solid var(--border);background:#0b0b16}.dot.on{background:var(--xp);border-color:var(--xp)}
-.note{line-height:1.6;font-size:13px;color:var(--muted)}
-.bottom{
-  position:fixed;left:0;right:0;bottom:0;background:#10101deF;border-top:1px solid var(--border);
-  padding:9px 14px calc(9px + env(safe-area-inset-bottom));backdrop-filter:blur(14px)
-}
-.bottom-inner{max-width:680px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.navbtn{border:0;border-radius:10px;padding:10px 6px;background:transparent;color:var(--muted);font-size:12px}
-.navbtn.active{background:var(--panel2);color:var(--text)}
+.wrap{max-width:760px;margin:auto;padding-top:12px}
 .screen{display:none}.screen.active{display:block}
-.road{position:relative;margin-left:5px}.node{display:flex;gap:12px;padding:9px 0}
-.circle{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--border);background:var(--panel2);z-index:1;font-weight:900}
-.node.past .circle{background:var(--xp);color:#10201d;border-color:var(--xp)}.node.now .circle{background:var(--gold);color:#201900;border-color:var(--gold)}
-.rtxt b{font-size:13px}.rtxt div{font-size:11px;color:var(--muted);margin-top:3px}
-label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-input{width:100%;background:#0c0c18;border:1px solid var(--border);border-radius:10px;color:var(--text);padding:12px;font-size:16px}
-.formrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.save{background:var(--xp);color:#10201d}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#242441;border:1px solid var(--border);padding:10px 14px;border-radius:10px;font-size:13px;display:none}
+.card{
+ background:linear-gradient(180deg,rgba(27,33,66,.97),rgba(15,19,40,.98));
+ border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;
+ box-shadow:0 12px 30px #0008,inset 0 1px 0 #ffffff0f;
+}
+.hero{display:grid;grid-template-columns:78px 1fr;gap:14px;align-items:center}
+.avatar{
+ width:78px;height:78px;border-radius:20px;display:grid;place-items:center;font-size:44px;
+ background:linear-gradient(145deg,#34276b,#1b5481);border:2px solid #7787ff;
+ box-shadow:0 0 24px #6677ff55;
+}
+h1,h2,h3,p{margin:0}.title{font-size:22px;font-weight:900}.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.badge{padding:5px 9px;border-radius:999px;background:#252b52;border:1px solid #3b4777;font-size:12px;font-weight:800}
+.bar{height:12px;background:#080b18;border:1px solid #2b3155;border-radius:999px;overflow:hidden;margin-top:7px}
+.fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--cyan),#8a8cff);transition:.35s}
+.hp{background:linear-gradient(90deg,#ff5f6d,#ff9966)}.energy{background:linear-gradient(90deg,#64e09d,#6ce5ff)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.stat{text-align:center;background:#0c1023;border:1px solid #29315a;border-radius:13px;padding:10px 6px}
+.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
+.section-title{font-weight:900;font-size:17px;margin-bottom:12px}
+.quest{
+ display:grid;grid-template-columns:46px 1fr auto;gap:11px;align-items:center;
+ background:#0c1023;border:1px solid #29315a;border-radius:15px;padding:12px;margin-top:9px
+}
+.icon{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:25px;background:#212951}
+.quest h3{font-size:15px}.quest p{font-size:12px;color:var(--muted);margin-top:4px}
+button{
+ border:0;border-radius:12px;padding:11px 13px;font-weight:900;font-size:14px;color:#0b1020;
+ background:linear-gradient(135deg,var(--gold),var(--orange));box-shadow:0 5px 14px #0005
+}
+button.secondary{color:var(--text);background:#29315b;border:1px solid #435086}
+button.danger{color:white;background:#6f2940}
+button:disabled{opacity:.45}
+.battle{text-align:center;background:linear-gradient(180deg,#411e45,#18132c);border-color:#743e7a}
+.enemy{font-size:76px;filter:drop-shadow(0 0 18px #ff5c8a99);animation:float 2s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-6px)}}
+.flash{animation:hit .35s}
+@keyframes hit{50%{transform:scale(1.16);filter:brightness(2)}}
+.enemy-name{font-weight:1000;font-size:20px;margin:6px}
+.coins{color:var(--gold);font-weight:900}
+.damage{font-size:28px;font-weight:1000;color:var(--gold);min-height:34px}
+.tabs{
+ position:fixed;left:0;right:0;bottom:0;z-index:9;
+ padding:8px 9px calc(8px + env(safe-area-inset-bottom));
+ background:#090b17ee;border-top:1px solid #29315a;backdrop-filter:blur(14px);
+ display:grid;grid-template-columns:repeat(5,1fr);gap:5px
+}
+.tab{background:transparent;color:var(--muted);box-shadow:none;padding:8px 2px;font-size:10px}
+.tab span{display:block;font-size:22px;margin-bottom:2px}.tab.active{color:var(--cyan);background:#161c39}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.item{background:#0c1023;border:1px solid #29315a;border-radius:14px;padding:13px;text-align:center}
+.item .big{font-size:34px}.item b{display:block;margin:5px}.item small{color:var(--muted)}
+.item.equipped{border-color:var(--gold);box-shadow:0 0 18px #ffd16644}
+.map{display:grid;gap:10px}
+.stage{
+ background:#0c1023;border:1px solid #29315a;border-radius:15px;padding:13px;
+ display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:10px
+}
+.stage.locked{opacity:.45}.stage.active{border-color:var(--cyan);box-shadow:0 0 18px #65e5ff2f}
+.stage .stage-icon{font-size:30px}
+input,select{
+ width:100%;padding:12px;border-radius:11px;border:1px solid #35406f;
+ background:#0b0f22;color:var(--text);font-size:16px;margin-top:6px
+}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0}
+.form-actions{display:flex;gap:8px;margin-top:12px}.form-actions button{flex:1}
+.log{padding:10px 0;border-bottom:1px solid #2a3155;font-size:13px}
+.toast{
+ position:fixed;left:50%;top:16%;transform:translateX(-50%) scale(.9);
+ background:#151b37;border:1px solid #6d78bb;border-radius:16px;padding:15px 20px;
+ font-weight:900;opacity:0;pointer-events:none;transition:.25s;z-index:20;text-align:center;
+ max-width:88vw
+}
+.toast.show{opacity:1;transform:translateX(-50%) scale(1)}
+.chip{display:inline-block;padding:4px 8px;border-radius:999px;background:#222a50;border:1px solid #3b4777;font-size:11px;margin:2px}
+.loot{font-size:38px}
+@media(max-width:390px){
+ .quest{grid-template-columns:42px 1fr}.quest button{grid-column:2}
+ .hero{grid-template-columns:66px 1fr}.avatar{width:66px;height:66px}
+ .tabs{grid-template-columns:repeat(5,1fr)}
+}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <section id="home" class="screen active">
-    <div class="panel top">
-      <div class="avatar">🏋️</div>
-      <div class="grow">
-        <div class="row"><div><h1>引體向上 · 升級之路</h1><div class="small">手機版健身 RPG</div></div><span class="streak" id="streak"></span></div>
-        <div class="row" style="margin-top:9px"><span class="badge" id="levelBadge"></span><span class="small" id="xpText"></span></div>
-        <div class="bar"><div class="fill" id="xpFill"></div></div>
+
+<section id="home" class="screen active">
+  <div class="card hero">
+    <div class="avatar" id="avatar">🧙‍♂️</div>
+    <div>
+      <div class="row">
+        <div><div class="title" id="playerTitle">健身勇者</div><div class="sub" id="rankText"></div></div>
+        <div class="badge" id="levelBadge">LV 1</div>
       </div>
+      <div class="sub">HP</div><div class="bar"><div class="fill hp" style="width:100%"></div></div>
+      <div class="sub" style="margin-top:6px">XP <span id="xpText"></span></div>
+      <div class="bar"><div id="xpBar" class="fill"></div></div>
     </div>
+  </div>
 
-    <div class="panel">
-      <div class="row"><h2>⚔️ 明日任務</h2><span class="date-pill" id="tomorrowDate"></span></div>
-      <div id="questList"></div>
-      <button id="completeBtn" class="btn" disabled>還有任務未完成</button>
-      <div class="track" id="sessionDots"></div>
+  <div class="card battle">
+    <div class="row"><div class="section-title">當前戰鬥</div><div class="coins">🪙 <span id="coins"></span></div></div>
+    <div id="enemy" class="enemy">👹</div>
+    <div id="enemyName" class="enemy-name"></div>
+    <div class="bar"><div id="enemyBar" class="fill hp"></div></div>
+    <div class="sub"><span id="enemyHp"></span> HP</div>
+    <div id="damageText" class="damage"></div>
+    <div class="sub" id="stageText"></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><div class="section-title">今日任務</div><span class="chip" id="comboText">Combo 0</span></div>
+    <div id="questList"></div>
+  </div>
+</section>
+
+<section id="map" class="screen">
+  <div class="card">
+    <div class="section-title">冒險地圖</div>
+    <div id="mapList" class="map"></div>
+  </div>
+</section>
+
+<section id="inventory" class="screen">
+  <div class="card">
+    <div class="row"><div class="section-title">背包與裝備</div><div class="coins">🪙 <span id="coins2"></span></div></div>
+    <div id="inventoryList" class="grid2"></div>
+  </div>
+  <div class="card">
+    <div class="section-title">戰鬥紀錄</div>
+    <div id="history"></div>
+  </div>
+</section>
+
+<section id="quests" class="screen">
+  <div class="card">
+    <div class="section-title">任務管理</div>
+    <div id="manageList"></div>
+  </div>
+  <div class="card">
+    <div class="section-title">新增健身任務</div>
+    <label>任務名稱<input id="nameInput" placeholder="例如：深蹲"></label>
+    <label>組數<input id="setsInput" type="number" min="1" value="3"></label>
+    <label>每組次數／秒數<input id="repsInput" placeholder="例如：12 下、30 秒"></label>
+    <label>傷害與 XP<input id="xpInput" type="number" min="1" value="30"></label>
+    <div class="form-actions"><button onclick="addQuest()">新增任務</button></div>
+  </div>
+</section>
+
+<section id="settings" class="screen">
+  <div class="card">
+    <div class="section-title">角色設定</div>
+    <label>勇者名稱<input id="playerName"></label>
+    <label>角色職業
+      <select id="classSelect">
+        <option value="戰士">戰士</option>
+        <option value="遊俠">遊俠</option>
+        <option value="武僧">武僧</option>
+        <option value="法師">法師</option>
+      </select>
+    </label>
+    <div class="form-actions"><button onclick="saveProfile()">儲存角色</button></div>
+  </div>
+  <div class="card">
+    <div class="section-title">資料管理</div>
+    <div class="form-actions">
+      <button class="secondary" onclick="exportData()">匯出存檔</button>
+      <button class="danger" onclick="resetGame()">重置遊戲</button>
     </div>
-
-    <div class="panel">
-      <h2>📊 目前進度</h2>
-      <div class="stats">
-        <div class="stat"><strong id="pullups">1/3</strong><span>引體向上</span></div>
-        <div class="stat"><strong id="totalSessions">4</strong><span>完整訓練</span></div>
-        <div class="stat"><strong id="completion">0%</strong><span>明日完成率</span></div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <h2>🩹 手腕保護</h2>
-      <div class="note">明天先避開跪姿伏地挺身、反向平板及長時間手掌撐地。單槓懸垂只有在手腕完全不痛時才做；若出現腫脹、麻木或休息時仍痛，停止上肢訓練。</div>
-    </div>
-  </section>
-
-  <section id="roadmap" class="screen">
-    <div class="panel"><h2>🗺️ 升級地圖</h2><div id="road"></div></div>
-  </section>
-
-  <section id="profile" class="screen">
-    <div class="panel">
-      <h2>⚙️ 訓練資料</h2>
-      <div class="formrow">
-        <div><label>目前最多引體向上</label><input id="pullInput" type="number" min="0" max="99"></div>
-        <div><label>連續訓練天數</label><input id="streakInput" type="number" min="0" max="999"></div>
-      </div>
-      <button class="btn save" id="saveProfile">儲存資料</button>
-      <button class="btn" id="resetTomorrow" style="background:var(--panel2);color:var(--text)">重設明日任務</button>
-    </div>
-    <div class="panel"><h2>📱 安裝方式</h2><div class="note">Android Chrome：開啟選單後選「新增至主畫面」或「安裝應用程式」。iPhone Safari：點分享，再選「加入主畫面」。</div></div>
-  </section>
+  </div>
+</section>
 </div>
 
-<div class="bottom"><div class="bottom-inner">
-  <button class="navbtn active" data-screen="home">🏠<br>任務</button>
-  <button class="navbtn" data-screen="roadmap">🗺️<br>地圖</button>
-  <button class="navbtn" data-screen="profile">⚙️<br>資料</button>
-</div></div>
-<div class="toast" id="toast"></div>
+<nav class="tabs">
+  <button class="tab active" data-tab="home"><span>⚔️</span>戰鬥</button>
+  <button class="tab" data-tab="map"><span>🗺️</span>地圖</button>
+  <button class="tab" data-tab="inventory"><span>🎒</span>背包</button>
+  <button class="tab" data-tab="quests"><span>📜</span>任務</button>
+  <button class="tab" data-tab="settings"><span>⚙️</span>設定</button>
+</nav>
+
+<div id="toast" class="toast"></div>
 
 <script>
-const QUESTS=[
-{id:"warmup",name:"🔥 熱身",detail:"肩膀繞圈、手臂畫圈、貓牛式，共 3 分鐘"},
-{id:"deadbug",name:"🐞 Dead Bug",detail:"3 組 × 10 下；下背保持貼地"},
-{id:"bridge",name:"🌉 臀橋",detail:"3 組 × 12 下；頂點夾臀 1 秒"},
-{id:"pelvic",name:"🦴 仰臥骨盆後傾",detail:"2 組 × 10 下；吐氣時輕壓下背"},
-{id:"legs",name:"🦵 仰臥交替抬腿",detail:"2 組 × 左右各 8 下；腰不要拱起"},
-{id:"bicep",name:"💪 二頭彎舉",detail:"3 組 × 10 下；可用水瓶或彈力帶"},
-{id:"hang",name:"🧗 單槓懸垂",detail:"2 組 × 10–15 秒",warn:"手腕不痛才做；不舒服可直接標記跳過"}
+const KEY='fitnessRpgGameV3';
+const stages=[
+ {name:'新手草原',icon:'🌿',enemy:'史萊姆王',face:'🟢',hp:180,reward:80},
+ {name:'燃燒峽谷',icon:'🌋',enemy:'火焰巨獸',face:'🔥',hp:320,reward:130},
+ {name:'寒霜高地',icon:'🏔️',enemy:'冰霜魔像',face:'🧊',hp:480,reward:180},
+ {name:'暗影城堡',icon:'🏰',enemy:'暗影騎士',face:'👿',hp:680,reward:260},
+ {name:'龍王之巔',icon:'🐉',enemy:'終焉龍王',face:'🐲',hp:1000,reward:500}
 ];
-const ROAD=[
-["1","新手覺醒","完成初始測驗"],
-["2","核心啟動","Dead Bug、臀橋與基礎核心"],
-["3","彈力帶輔助引體","完成本級訓練後解鎖"],
-["4","負向引體","練習緩慢下放"],
-["5","背肌與二頭強化","增加拉力基礎"],
-["6","輔助引體 8–10 下","建立穩定訓練量"],
-["7","負向引體 5 秒","提升離心控制"],
-["8","降低輔助強度","接近徒手階段"],
-["9","徒手 1–2 下","穩定完成"],
-["🏆","BOSS：徒手 3 下","最終目標"]
+const lootPool=[
+ {id:'sword',name:'力量之劍',icon:'🗡️',bonus:10,desc:'所有傷害 +10%'},
+ {id:'shield',name:'恢復護盾',icon:'🛡️',bonus:0,desc:'Boss 戰徽章'},
+ {id:'boots',name:'疾風戰靴',icon:'👟',bonus:5,desc:'所有傷害 +5%'},
+ {id:'ring',name:'勇氣戒指',icon:'💍',bonus:15,desc:'所有傷害 +15%'},
+ {id:'crown',name:'王者之冠',icon:'👑',bonus:20,desc:'所有傷害 +20%'}
 ];
-const KEY="fitnessRpgMobileV1";
-const defaultState={level:2,streak:4,sessionsThisLevel:0,totalSessions:4,maxPullups:1,checks:{},completed:false};
-let state=JSON.parse(localStorage.getItem(KEY)||"null")||defaultState;
-QUESTS.forEach(q=>{if(!(q.id in state.checks))state.checks[q.id]=false});
+const avatars={戰士:'🧙‍♂️',遊俠:'🏹',武僧:'🥋',法師:'🧙‍♀️'};
+const defaults={
+ player:'健身勇者',className:'戰士',level:2,xp:35,coins:120,stage:0,
+ enemyHp:180,combo:0,inventory:[],equipped:null,
+ lastDate:'',quests:[
+  {id:1,name:'引體向上修煉',sets:3,reps:'每組 1 次',xp:60,done:false,icon:'🧗'},
+  {id:2,name:'深蹲斬擊',sets:3,reps:'每組 15 下',xp:45,done:false,icon:'⚔️'},
+  {id:3,name:'核心防禦',sets:3,reps:'每組 30 秒',xp:40,done:false,icon:'🛡️'}
+ ],history:[]
+};
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||structuredClone(defaults);
+
+function todayKey(){return new Date().toISOString().slice(0,10)}
+function dailyReset(){
+ if(state.lastDate!==todayKey()){
+   state.quests.forEach(q=>q.done=false);
+   state.combo=0;
+   state.lastDate=todayKey();
+ }
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function tomorrow(){
- const d=new Date();d.setDate(d.getDate()+1);
- return new Intl.DateTimeFormat("zh-TW",{month:"long",day:"numeric",weekday:"short"}).format(d)
+function needXp(){return 100+state.level*35}
+function rank(){
+ if(state.level>=30)return '傳說中的健身王';
+ if(state.level>=20)return '史詩勇者';
+ if(state.level>=10)return '菁英冒險者';
+ if(state.level>=5)return '資深冒險者';
+ return '新手冒險者';
 }
-function need(){return state.level<=3?2:state.level<=6?3:4}
-function toast(t){const e=document.getElementById("toast");e.textContent=t;e.style.display="block";setTimeout(()=>e.style.display="none",1700)}
+function bonusRate(){
+ const item=lootPool.find(x=>x.id===state.equipped);
+ return item ? item.bonus/100 : 0;
+}
 function render(){
- const doneCount=QUESTS.filter(q=>state.checks[q.id]).length;
- const all=doneCount===QUESTS.length;
- document.getElementById("streak").textContent=`🔥 ${state.streak} 天`;
- document.getElementById("levelBadge").textContent=`LV.${state.level}`;
- document.getElementById("xpText").textContent=`${state.sessionsThisLevel}/${need()} 次`;
- document.getElementById("xpFill").style.width=`${Math.min(100,state.sessionsThisLevel/need()*100)}%`;
- document.getElementById("tomorrowDate").textContent=tomorrow();
- document.getElementById("questList").innerHTML=QUESTS.map(q=>`
- <div class="quest ${state.checks[q.id]?"done":""}" data-id="${q.id}">
-  <div class="check">${state.checks[q.id]?"✓":""}</div>
-  <div><div class="qname">${q.name}</div><div class="qdetail">${q.detail}</div>${q.warn?`<div class="warn">${q.warn}</div>`:""}</div>
- </div>`).join("");
- const b=document.getElementById("completeBtn");
- b.disabled=!all||state.completed;
- b.className="btn "+(state.completed?"done":all?"ready":"");
- b.textContent=state.completed?"✓ 明日任務已預先完成":all?"⚔️ 完成任務並獲得 EXP":"還有任務未完成";
- document.getElementById("sessionDots").innerHTML=Array.from({length:need()},(_,i)=>`<div class="dot ${i<state.sessionsThisLevel?"on":""}"></div>`).join("")+`<span class="small">再完成 ${Math.max(0,need()-state.sessionsThisLevel)} 次升級</span>`;
- document.getElementById("pullups").textContent=`${state.maxPullups}/3`;
- document.getElementById("totalSessions").textContent=state.totalSessions;
- document.getElementById("completion").textContent=Math.round(doneCount/QUESTS.length*100)+"%";
- document.getElementById("pullInput").value=state.maxPullups;
- document.getElementById("streakInput").value=state.streak;
- document.getElementById("road").innerHTML=ROAD.map((r,i)=>{
-   const lvl=i+1,cls=lvl<state.level?"past":lvl===state.level?"now":"";
-   return `<div class="node ${cls}"><div class="circle">${r[0]}</div><div class="rtxt"><b>Lv.${lvl} ${r[1]}</b><div>${r[2]}</div></div></div>`
- }).join("");
- document.querySelectorAll(".quest").forEach(el=>el.onclick=()=>{if(state.completed)return;state.checks[el.dataset.id]=!state.checks[el.dataset.id];save();render()});
+ dailyReset();
+ const s=stages[state.stage];
+ document.getElementById('playerTitle').textContent=state.player;
+ document.getElementById('avatar').textContent=avatars[state.className]||'🧙‍♂️';
+ document.getElementById('rankText').textContent=`${rank()} · ${state.className}`;
+ document.getElementById('levelBadge').textContent=`LV ${state.level}`;
+ document.getElementById('xpText').textContent=`${state.xp}/${needXp()}`;
+ document.getElementById('xpBar').style.width=Math.min(100,state.xp/needXp()*100)+'%';
+ document.getElementById('coins').textContent=state.coins;
+ document.getElementById('coins2').textContent=state.coins;
+ document.getElementById('comboText').textContent=`Combo ${state.combo}`;
+ document.getElementById('enemy').textContent=s.face;
+ document.getElementById('enemyName').textContent=s.enemy;
+ document.getElementById('enemyHp').textContent=Math.max(0,state.enemyHp);
+ document.getElementById('enemyBar').style.width=Math.max(0,state.enemyHp/s.hp*100)+'%';
+ document.getElementById('stageText').textContent=`第 ${state.stage+1} 關 · ${s.name}`;
+
+ const q=document.getElementById('questList'); q.innerHTML='';
+ state.quests.forEach(x=>{
+  q.innerHTML+=`<div class="quest"><div class="icon">${x.icon||'💪'}</div><div><h3>${x.name}</h3><p>${x.sets} 組 · ${x.reps} · 基礎傷害 ${x.xp}</p></div><button ${x.done?'disabled':''} onclick="completeQuest(${x.id})">${x.done?'完成':'攻擊'}</button></div>`;
+ });
+
+ const m=document.getElementById('manageList'); m.innerHTML='';
+ state.quests.forEach(x=>{
+  m.innerHTML+=`<div class="quest"><div class="icon">${x.icon||'💪'}</div><div><h3>${x.name}</h3><p>${x.sets} 組 · ${x.reps} · ${x.xp} 傷害</p></div><button class="danger" onclick="deleteQuest(${x.id})">刪除</button></div>`;
+ });
+
+ const map=document.getElementById('mapList'); map.innerHTML='';
+ stages.forEach((x,i)=>{
+  const locked=i>state.stage;
+  map.innerHTML+=`<div class="stage ${locked?'locked':''} ${i===state.stage?'active':''}">
+   <div class="stage-icon">${x.icon}</div>
+   <div><b>${i+1}. ${x.name}</b><div class="sub">${x.enemy} · ${x.hp} HP</div></div>
+   <div>${i<state.stage?'✅':i===state.stage?'⚔️':'🔒'}</div>
+  </div>`;
+ });
+
+ const inv=document.getElementById('inventoryList'); inv.innerHTML='';
+ if(!state.inventory.length){
+   inv.innerHTML='<div class="sub">尚未獲得裝備。擊敗 Boss 會掉落寶物。</div>';
+ }else{
+   state.inventory.forEach(id=>{
+     const it=lootPool.find(x=>x.id===id);
+     inv.innerHTML+=`<div class="item ${state.equipped===id?'equipped':''}" onclick="equip('${id}')">
+       <div class="big">${it.icon}</div><b>${it.name}</b><small>${it.desc}</small>
+       <div class="chip">${state.equipped===id?'已裝備':'點擊裝備'}</div></div>`;
+   });
+ }
+
+ document.getElementById('playerName').value=state.player;
+ document.getElementById('classSelect').value=state.className;
+ const h=document.getElementById('history');
+ h.innerHTML=state.history.length?state.history.slice(0,30).map(x=>`<div class="log">⚔️ ${x}</div>`).join(''):'<div class="sub">還沒有戰鬥紀錄。</div>';
+ save();
 }
-document.getElementById("completeBtn").onclick=()=>{
- if(state.completed)return;
- state.completed=true;state.totalSessions++;state.sessionsThisLevel++;
- if(state.sessionsThisLevel>=need()&&state.level<10){state.sessionsThisLevel=0;state.level++;toast(`LEVEL UP！升到 Lv.${state.level}`)}else toast("任務完成，EXP 已增加");
- save();render()
-};
-document.getElementById("saveProfile").onclick=()=>{
- state.maxPullups=Math.max(0,+document.getElementById("pullInput").value||0);
- state.streak=Math.max(0,+document.getElementById("streakInput").value||0);save();render();toast("資料已儲存")
-};
-document.getElementById("resetTomorrow").onclick=()=>{
- state.checks={};QUESTS.forEach(q=>state.checks[q.id]=false);state.completed=false;save();render();toast("明日任務已重設")
-};
-document.querySelectorAll(".navbtn").forEach(btn=>btn.onclick=()=>{
- document.querySelectorAll(".navbtn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
- document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById(btn.dataset.screen).classList.add("active")
+
+function completeQuest(id){
+ const x=state.quests.find(q=>q.id===id); if(!x||x.done)return;
+ x.done=true; state.combo++;
+ const comboBonus=Math.min(0.5,state.combo*0.05);
+ const damage=Math.round(x.xp*(1+bonusRate()+comboBonus));
+ state.xp+=x.xp;
+ state.coins+=Math.ceil(x.xp/3);
+ state.enemyHp-=damage;
+ state.history.unshift(`${new Date().toLocaleDateString()} 完成「${x.name}」，造成 ${damage} 傷害`);
+ showDamage(damage);
+ let leveled=false;
+ while(state.xp>=needXp()){state.xp-=needXp();state.level++;leveled=true}
+ if(state.enemyHp<=0){winBoss()}
+ else if(leveled)toast(`✨ LEVEL UP！升到 LV ${state.level}`);
+ render();
+}
+
+function showDamage(n){
+ const el=document.getElementById('damageText');
+ const enemy=document.getElementById('enemy');
+ el.textContent=`-${n}`;
+ enemy.classList.add('flash');
+ setTimeout(()=>enemy.classList.remove('flash'),380);
+ setTimeout(()=>el.textContent='',1000);
+}
+
+function winBoss(){
+ const s=stages[state.stage];
+ state.coins+=s.reward;
+ let drop=null;
+ const available=lootPool.filter(x=>!state.inventory.includes(x.id));
+ if(available.length && Math.random()<0.8){
+   drop=available[Math.floor(Math.random()*available.length)];
+   state.inventory.push(drop.id);
+ }
+ state.history.unshift(`擊敗「${s.enemy}」，獲得 ${s.reward} 金幣${drop?`，掉落 ${drop.name}`:''}`);
+ if(state.stage<stages.length-1){
+   state.stage++;
+   state.enemyHp=stages[state.stage].hp;
+   toast(`🏆 Boss 擊破！${drop?`掉落 ${drop.icon} ${drop.name}`:'獲得大量金幣'}，解鎖下一關！`);
+ }else{
+   state.enemyHp=s.hp;
+   toast(`🐉 你擊敗了終焉龍王！${drop?`掉落 ${drop.icon} ${drop.name}`:''}`);
+ }
+}
+
+function equip(id){
+ state.equipped=state.equipped===id?null:id;
+ const it=lootPool.find(x=>x.id===id);
+ toast(state.equipped?`已裝備 ${it.icon} ${it.name}`:'已卸下裝備');
+ render();
+}
+
+function addQuest(){
+ const name=document.getElementById('nameInput').value.trim();
+ const sets=+document.getElementById('setsInput').value||1;
+ const reps=document.getElementById('repsInput').value.trim()||'自訂';
+ const xp=+document.getElementById('xpInput').value||20;
+ if(!name)return toast('請輸入任務名稱');
+ state.quests.push({id:Date.now(),name,sets,reps,xp,done:false,icon:'💪'});
+ document.getElementById('nameInput').value='';
+ document.getElementById('repsInput').value='';
+ toast('📜 新任務已加入');
+ render();
+}
+
+function deleteQuest(id){
+ state.quests=state.quests.filter(x=>x.id!==id);
+ render();
+}
+
+function saveProfile(){
+ state.player=document.getElementById('playerName').value.trim()||'健身勇者';
+ state.className=document.getElementById('classSelect').value;
+ toast('角色資料已儲存');
+ render();
+}
+
+function exportData(){
+ const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);
+ a.download='fitness-rpg-v3-save.json';
+ a.click();
+}
+
+function resetGame(){
+ if(confirm('確定要重置全部遊戲進度嗎？')){
+   state=structuredClone(defaults);
+   state.lastDate=todayKey();
+   render();
+   toast('遊戲已重置');
+ }
+}
+
+function toast(msg){
+ const t=document.getElementById('toast');
+ t.innerHTML=msg;
+ t.classList.add('show');
+ setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('.tab,.screen').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');
+ document.getElementById(b.dataset.tab).classList.add('active');
 });
-if("serviceWorker" in navigator)navigator.serviceWorker.register("./service-worker.js");
+
+dailyReset();
 render();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
 </script>
 </body>
 </html>

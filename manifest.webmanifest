@@ -1,11 +1,10 @@
 {
-  "name": "引體向上 · 升級之路",
+  "name": "健身勇者 RPG 3.0",
   "short_name": "健身RPG",
-  "start_url": "./index.html",
+  "start_url": "./",
   "display": "standalone",
-  "background_color": "#0f0f1a",
-  "theme_color": "#0f0f1a",
-  "description": "手機版遊戲化健身任務與引體向上進度追蹤器",
+  "background_color": "#070914",
+  "theme_color": "#090b17",
   "icons": [
     {
       "src": "icon.svg",
