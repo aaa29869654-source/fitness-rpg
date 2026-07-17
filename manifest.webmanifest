@@ -1,11 +1,1 @@
-{
-  "name": "Fitness Odyssey V7.0 Build 3",
-  "short_name": "Odyssey",
-  "start_url": "./",
-  "scope": "./",
-  "display": "standalone",
-  "background_color": "#07111f",
-  "theme_color": "#07111f",
-  "description": "具有程序化音樂、動畫與科學化訓練的健身 RPG PWA。",
-  "icons": []
-}
+{"name":"Fitness Odyssey V7 Solo","short_name":"Fitness Odyssey","start_url":"./","display":"standalone","background_color":"#07111f","theme_color":"#07111f","lang":"zh-Hant","description":"單人健身 RPG 與引體向上養成系統"}
