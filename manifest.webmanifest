@@ -1,1 +1,11 @@
-{"name":"Fitness Odyssey：健身勇者","short_name":"健身勇者","start_url":"./","display":"standalone","background_color":"#090d19","theme_color":"#0b1020","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "Fitness Odyssey V7.0 GP",
+  "short_name": "Odyssey",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "description": "以循序漸進健身為核心的 RPG PWA。",
+  "icons": []
+}
