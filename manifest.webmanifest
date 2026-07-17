@@ -1,16 +1,1 @@
-{
-  "name": "健身勇者 RPG 4.0",
-  "short_name": "健身RPG",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#080b17",
-  "theme_color": "#080b17",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
-    }
-  ]
-}
+{"name":"Fitness Odyssey：健身勇者","short_name":"健身勇者","start_url":"./","display":"standalone","background_color":"#090d19","theme_color":"#0b1020","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}

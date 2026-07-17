@@ -1,25 +1,21 @@
-健身勇者 RPG 4.0
+Fitness Odyssey 5.0｜新手養成篇
 
-新功能：
-- 戰鬥動畫：角色衝刺、斬擊、怪物受傷與傷害數字
-- 五張地圖、五個 Boss 與主線劇情
-- NPC 指引
-- 商店與金幣購買裝備
-- 裝備可增加攻擊力
-- 技能樹與技能點
-- 等級、XP、Combo、連續訓練天數
-- 自訂新增與刪除健身任務
-- 每日任務自動重置
-- 戰鬥紀錄與 JSON 存檔匯出
+上傳這 5 個檔案到 GitHub Pages 專案根目錄：
+- index.html
+- manifest.webmanifest
+- service-worker.js
+- icon.svg
+- README.txt
 
-GitHub 更新方式：
-1. 解壓縮 ZIP。
-2. 將以下五個檔案上傳並覆蓋 repository 根目錄：
-   index.html
-   manifest.webmanifest
-   service-worker.js
-   icon.svg
-   README.txt
-3. Commit changes。
-4. 等候 GitHub Pages 約 1 分鐘。
-5. Safari 重新整理；若仍顯示舊版，完全關閉主畫面 App 後再開啟。
+更新後若仍顯示舊版：
+1. 等待 GitHub Pages 30–60 秒。
+2. Safari 重新整理。
+3. 若已加入主畫面，完全關閉 App 後再開。
+
+主要功能：
+- 12 週新手養成主線
+- 每日精神／疼痛檢查
+- 自動正常訓練或恢復任務
+- 每組完成即攻擊 Boss
+- 能力、里程碑、命運之書
+- 離線 PWA 與本機存檔
