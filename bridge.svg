@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#173d5c"/><stop offset="1" stop-color="#0a182a"/></linearGradient></defs>
+<rect width="800" height="450" rx="36" fill="url(#g)"/><circle cx="400" cy="190" r="112" fill="#102b44" stroke="#55dca3" stroke-width="5"/>
+<text x="400" y="225" text-anchor="middle" font-size="110" font-family="system-ui">⌒</text>
+<rect x="555" y="125" width="160" height="92" rx="24" fill="#ffc857"/><text x="635" y="183" text-anchor="middle" font-size="38" font-weight="800" font-family="system-ui" fill="#18202a">↑</text>
+<text x="400" y="350" text-anchor="middle" font-size="38" font-weight="800" font-family="system-ui" fill="white">臀橋</text>
+<text x="400" y="397" text-anchor="middle" font-size="24" font-family="system-ui" fill="#b8c9d9">腳踩地，臀部向上</text></svg>
